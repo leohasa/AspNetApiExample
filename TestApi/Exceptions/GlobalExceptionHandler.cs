@@ -13,18 +13,17 @@ public class GlobalExceptionHandler(IProblemDetailsService problemDetailsService
         var problemDetailsContext = new ProblemDetailsContext
         {
             HttpContext = httpContext,
-            Exception = exception
+            Exception = exception,
+            ProblemDetails = exception switch
+            {
+                ArgumentException argEx => CreateBadRequestProblemDetails(argEx),
+                UnauthorizedAccessException unAuthEx => CreateUnauthorizedProblemDetails(unAuthEx),
+                EntityNotFoundException entityNotFoundEx => CreateNotFoundProblemDetails(entityNotFoundEx),
+                DuplicatedEntityException duplicatedEntityEx => CreateDuplicatedProblemDetails(duplicatedEntityEx),
+                _ => CreateInternalServerErrorProblemDetails(exception)
+            }
         };
-        
-        problemDetailsContext.ProblemDetails = exception switch
-        {
-            ArgumentException argEx => CreateBadRequestProblemDetails(argEx),
-            UnauthorizedAccessException unAuthEx => CreateUnauthorizedProblemDetails(unAuthEx),
-            EntityNotFoundException entityNotFoundEx => CreateNotFoundProblemDetails(entityNotFoundEx),
-            DuplicatedEntityException duplicatedEntityEx => CreateDuplicatedProblemDetails(duplicatedEntityEx),
-            _ => CreateInternalServerErrorProblemDetails(exception)
-        };
-        
+
         httpContext.Response.StatusCode = problemDetailsContext.ProblemDetails.Status ?? (int)HttpStatusCode.InternalServerError;
         return await problemDetailsService.TryWriteAsync(problemDetailsContext);
     }

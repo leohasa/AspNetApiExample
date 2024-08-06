@@ -7,7 +7,32 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.35" />
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.1" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Config\" />
+      <Folder Include="Security\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="DBContext\**" />
+      <Compile Include="DbContext\ConnectionModel.cs" />
+      <Compile Include="DbContext\DapperContext.cs" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="DBContext\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="DBContext\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="DBContext\**" />
     </ItemGroup>
 
 </Project>

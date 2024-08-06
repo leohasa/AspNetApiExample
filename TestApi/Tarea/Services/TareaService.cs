@@ -1,3 +1,4 @@
+using TestApi.Exceptions;
 using TestApi.Tarea.Models;
 using TestApi.Tarea.Repositories;
 
@@ -13,7 +14,7 @@ public class TareaService(ITareaRepository tareaRepository) : ITareaService
         var task = await tareaRepository.GetTaskById(id);
         
         if (task is null)
-            throw new Exception("Task not found");
+            throw new EntityNotFoundException("Task not found");
         
         return task;
     }
@@ -28,7 +29,7 @@ public class TareaService(ITareaRepository tareaRepository) : ITareaService
         var existingTask = await tareaRepository.GetTaskById(id);
         
         if (existingTask is null)
-            throw new Exception("Task not found");
+            throw new EntityNotFoundException("Task not found");
         
         // TODO: Implement validation for duplicated task names
         

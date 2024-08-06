@@ -19,6 +19,17 @@ public static class ServiceExtensions
             });
         });
     }
+    
+    public static void ConfigureProblemDetails(this IServiceCollection services)
+    {
+        services.AddProblemDetails(options =>
+        {
+            options.CustomizeProblemDetails = ctx =>
+            {
+                ctx.ProblemDetails.Extensions.Add("instance", $"{ctx.HttpContext.Request.Method} {ctx.HttpContext.Request.Path}");
+            };
+        });
+    }
 
     public static void ConfigureRepositories(this IServiceCollection services)
     {
